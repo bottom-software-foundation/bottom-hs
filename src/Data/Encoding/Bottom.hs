@@ -64,6 +64,10 @@ decode (Bottom bs) = case decode' bs of
 
 type Parser = Parsec Void ByteString
 
+-- TODO: The error messages from this function are very strange. I encountered
+-- the same issue when trying to print ByteString values directly without
+-- encoding to Text. What if we parsed on Text instead? Would those error
+-- messages be nicer?
 decode' :: ByteString -> Either Text Text
 decode' bs = case runParser bottomParser "" bs of
   Left err -> Left $ T.pack $ errorBundlePretty err
