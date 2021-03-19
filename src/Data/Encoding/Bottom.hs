@@ -1,40 +1,56 @@
-module Data.Encoding.Bottom (Bottom, asText, encode, decode, decode') where
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE StrictData #-}
 
+module Data.Encoding.Bottom
+  ( Bottom,
+    unBottom,
+    encode,
+    decode,
+    decode',
+  )
+where
+
+import Control.Monad (when)
 import Data.Bits (zeroBits)
 import Data.ByteString (ByteString)
 import qualified Data.ByteString as BS
+import Data.List (unfoldr)
 import Data.Text (Text)
 import qualified Data.Text as T
 import Data.Text.Encoding (decodeUtf8, encodeUtf8)
 import Data.Word (Word8)
-import Data.List (unfoldr)
 import Data.Maybe (fromJust)
 
 -- Bottom is just a wrapper around a ByteString.
 newtype Bottom = Bottom ByteString
-  deriving (Show, Eq)
+  deriving (Show, Eq, Ord, Semigroup, Monoid)
 
-asText :: Bottom -> Text
-asText (Bottom t) = decodeUtf8 t
+unBottom :: Bottom -> ByteString
+unBottom (Bottom bs) = bs
 
--- Constants for encoding.
+-- Value characters for encoding.
+singleton :: Char -> ByteString
+singleton = encodeUtf8 . T.singleton
+
 twoHundred :: ByteString
-twoHundred = encodeUtf8 $ T.singleton '\x1FAC2'
+twoHundred = singleton '\x1FAC2'
 
 fifty :: ByteString
-fifty = encodeUtf8 $ T.singleton '\x1F496'
+fifty = singleton '\x1F496'
 
 ten :: ByteString
-ten = encodeUtf8 $ T.singleton '\x2728'
+ten = singleton '\x2728'
 
 five :: ByteString
-five = encodeUtf8 $ T.singleton '\x1F97A'
+five = singleton '\x1F97A'
 
 one :: ByteString
-one = encodeUtf8 $ T.singleton '\x002C'
+one = singleton '\x002C'
 
 zero :: ByteString
-zero = encodeUtf8 $ T.singleton '\x2764'
+zero = singleton '\x2764'
 
 separator :: ByteString
 separator = encodeUtf8 $ T.pack ['\x1F449', '\x1F448']
