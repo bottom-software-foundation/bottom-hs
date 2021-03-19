@@ -11,8 +11,14 @@ common lang
     -Wincomplete-record-updates -Wmissing-home-modules
     -Wmissing-export-lists -Wredundant-constraints
 
+common deps
+  build-depends:
+    , bytestring  ==0.11.1.0
+    , text        ==1.2.4.1
+
 library
   import:          lang
+  import:          deps
   hs-source-dirs:  src
 
   -- cabal-fmt: expand src
@@ -20,10 +26,10 @@ library
   build-depends:
     , bytestring  ==0.11.1.0
     , megaparsec  ==9.0.1
-    , text        ==1.2.4.1
 
 test-suite tests
   import:         lang
+  import:         deps
   type:           exitcode-stdio-1.0
   hs-source-dirs: test
   main-is:        Main.hs
@@ -33,10 +39,10 @@ test-suite tests
   build-depends:
     , bottom
     , hspec   ==2.7.8
-    , text    ==1.2.4.1
 
 executable bottom
   import:         lang
+  import:         deps
   ghc-options:    -threaded -with-rtsopts=-N
   hs-source-dirs: cmd/bottom
   main-is:        Main.hs

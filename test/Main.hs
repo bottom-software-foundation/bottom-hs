@@ -1,7 +1,8 @@
 {-# LANGUAGE OverloadedStrings #-}
+
 module Main (main) where
 
-import Data.Encoding.Bottom (encode, unBottom, decode')
+import Data.Encoding.Bottom (decode', encode, unBottom)
 import Data.Text (Text)
 import qualified Data.Text as T
 import Data.Text.Encoding (encodeUtf8)
@@ -24,7 +25,7 @@ testCases =
   [ ("Test", "💖✨✨✨,,,,👉👈💖💖,👉👈💖💖✨🥺👉👈💖💖✨🥺,👉👈"),
     ("h", "💖💖,,,,👉👈"),
     ("🥺", twoHundred <> "✨✨✨✨👉👈💖💖💖🥺,,,,👉👈💖💖💖✨🥺👉👈💖💖💖✨✨✨🥺,👉👈"),
-    ("がんばれ",
+    ( "がんばれ",
       twoHundred
         <> "✨✨🥺,,👉👈💖💖✨✨🥺,,,,👉👈💖💖✨✨✨✨👉👈"
         <> twoHundred
