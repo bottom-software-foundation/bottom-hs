@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main (main) where
 
-import Data.Encoding.Bottom (encode, unBottom)
+import Data.Encoding.Bottom (encode, unBottom, decode')
 import Data.Text (Text)
 import qualified Data.Text as T
 import Data.Text.Encoding (encodeUtf8)
@@ -12,22 +12,33 @@ twoHundred :: Text
 twoHundred = T.singleton '\129730'
 
 testEncode :: Text -> Text -> Expectation
-testEncode text bottom = unBottom (encode text) `shouldBe` encodeUtf8 bottom
+testEncode input expected = unBottom (encode input) `shouldBe` encodeUtf8 expected
+
+testDecode :: Text -> Text -> Expectation
+testDecode input expected = case decode' $ encodeUtf8 input of
+  Right r -> encodeUtf8 r `shouldBe` encodeUtf8 expected
+  Left err -> error $ T.unpack err
+
+testCases :: [(Text, Text)]
+testCases =
+  [ ("Test", "💖✨✨✨,,,,👉👈💖💖,👉👈💖💖✨🥺👉👈💖💖✨🥺,👉👈"),
+    ("h", "💖💖,,,,👉👈"),
+    ("🥺", twoHundred <> "✨✨✨✨👉👈💖💖💖🥺,,,,👉👈💖💖💖✨🥺👉👈💖💖💖✨✨✨🥺,👉👈"),
+    ("がんばれ",
+      twoHundred
+        <> "✨✨🥺,,👉👈💖💖✨✨🥺,,,,👉👈💖💖✨✨✨✨👉👈"
+        <> twoHundred
+        <> "✨✨🥺,,👉👈💖💖✨✨✨👉👈💖💖✨✨✨✨🥺,,👉👈"
+        <> twoHundred
+        <> "✨✨🥺,,👉👈💖💖✨✨🥺,,,,👉👈💖💖💖✨✨🥺,👉👈"
+        <> twoHundred
+        <> "✨✨🥺,,👉👈💖💖✨✨✨👉👈💖💖✨✨✨✨👉👈"
+    )
+  ]
 
 main :: IO ()
 main = hspec $ do
   -- Taken from https://github.com/bottom-software-foundation/bottom-rs/blob/need_top/src/bottom.rs
   describe "Data.Encoding.Bottom" $ do
-    it "encodes strings" $ do
-      testEncode "Test" "💖✨✨✨,,,,👉👈💖💖,👉👈💖💖✨🥺👉👈💖💖✨🥺,👉👈"
-      testEncode "h" "💖💖,,,,👉👈"
-      testEncode "🥺" $ twoHundred <> "✨✨✨✨👉👈💖💖💖🥺,,,,👉👈💖💖💖✨🥺👉👈💖💖💖✨✨✨🥺,👉👈"
-      testEncode "がんばれ" $
-        twoHundred
-          <> "✨✨🥺,,👉👈💖💖✨✨🥺,,,,👉👈💖💖✨✨✨✨👉👈"
-          <> twoHundred
-          <> "✨✨🥺,,👉👈💖💖✨✨✨👉👈💖💖✨✨✨✨🥺,,👉👈"
-          <> twoHundred
-          <> "✨✨🥺,,👉👈💖💖✨✨🥺,,,,👉👈💖💖💖✨✨🥺,👉👈"
-          <> twoHundred
-          <> "✨✨🥺,,👉👈💖💖✨✨✨👉👈💖💖✨✨✨✨👉👈"
+    it "encodes strings" $ sequence_ $ uncurry testEncode <$> testCases
+    it "decodes strings" $ sequence_ $ uncurry (flip testDecode) <$> testCases

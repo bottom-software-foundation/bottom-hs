@@ -12,7 +12,7 @@ module Data.Encoding.Bottom
   )
 where
 
-import Control.Monad (when)
+import Control.Monad (void)
 import Data.Bits (zeroBits)
 import Data.ByteString (ByteString)
 import qualified Data.ByteString as BS
@@ -20,8 +20,9 @@ import Data.List (unfoldr)
 import Data.Text (Text)
 import qualified Data.Text as T
 import Data.Text.Encoding (decodeUtf8, encodeUtf8)
+import Data.Void (Void)
 import Data.Word (Word8)
-import Data.Maybe (fromJust)
+import Text.Megaparsec (Parsec, chunk, eof, errorBundlePretty, runParser, someTill, (<|>))
 
 -- Bottom is just a wrapper around a ByteString.
 newtype Bottom = Bottom ByteString
@@ -57,10 +58,46 @@ separator = encodeUtf8 $ T.pack ['\x1F449', '\x1F448']
 
 -- Decoding functions.
 decode :: Bottom -> Text
-decode (Bottom bs) = fromJust $ decode' bs
+decode (Bottom bs) = case decode' bs of
+  Right r -> r
+  Left err -> error "Data.Encoding.Bottom.decode: malformed Bottom: " <> err
 
-decode' :: ByteString -> Maybe Text
-decode' = undefined
+type Parser = Parsec Void ByteString
+
+decode' :: ByteString -> Either Text Text
+decode' bs = case runParser bottomParser "" bs of
+  Left err -> Left $ T.pack $ errorBundlePretty err
+  Right r -> Right r
+  where
+    bottomParser :: Parser Text
+    bottomParser = decodeUtf8 . BS.pack <$> (fmap . fmap) toEnum (groupParser `someTill` eof)
+
+    groupParser :: Parser Int
+    groupParser = parseNull <|> parseValues
+      where
+        parseNull = zeroParser >> separatorParser >> return 0
+        parseValues = sum <$> (twoHundredParser <|> fiftyParser <|> tenParser <|> fiveParser <|> oneParser) `someTill` separatorParser
+
+    twoHundredParser :: Parser Int
+    twoHundredParser = chunk twoHundred >> return 200
+
+    fiftyParser :: Parser Int
+    fiftyParser = chunk fifty >> return 50
+
+    tenParser :: Parser Int
+    tenParser = chunk ten >> return 10
+
+    fiveParser :: Parser Int
+    fiveParser = chunk five >> return 5
+
+    oneParser :: Parser Int
+    oneParser = chunk one >> return 1
+
+    zeroParser :: Parser Int
+    zeroParser = chunk zero >> return 0
+
+    separatorParser :: Parser ()
+    separatorParser = void $ chunk separator
 
 -- Encoding functions.
 encode :: Text -> Bottom

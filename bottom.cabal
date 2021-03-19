@@ -4,12 +4,8 @@ version:       0.1.0.0
 build-type:    Simple
 
 common lang
-  build-depends:      base ^>=4.14
-  default-language:   Haskell2010
-  default-extensions:
-    OverloadedStrings
-    StrictData
-
+  build-depends:    base ^>=4.14
+  default-language: Haskell2010
   ghc-options:
     -Wall -Wincomplete-uni-patterns -Wcompat
     -Wincomplete-record-updates -Wmissing-home-modules
@@ -20,11 +16,10 @@ library
   hs-source-dirs:  src
 
   -- cabal-fmt: expand src
-  exposed-modules:
-    Data.Encoding.Bottom
-
+  exposed-modules: Data.Encoding.Bottom
   build-depends:
     , bytestring  ==0.11.1.0
+    , megaparsec  ==9.0.1
     , text        ==1.2.4.1
 
 test-suite tests
@@ -38,7 +33,7 @@ test-suite tests
   build-depends:
     , bottom
     , hspec   ==2.7.8
-    , text        ==1.2.4.1
+    , text    ==1.2.4.1
 
 executable bottom
   import:         lang
