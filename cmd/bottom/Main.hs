@@ -3,11 +3,10 @@
 
 module Main (main) where
 
-import qualified Data.ByteString.Char8 as BS
 import Data.Encoding.Bottom (decode', encode, unBottom)
 import Data.Text (Text)
 import qualified Data.Text as T
-import Data.Text.Encoding (encodeUtf8, decodeUtf8)
+import Data.Text.Encoding (decodeUtf8, encodeUtf8)
 import Options.Applicative
   ( Parser,
     ParserInfo,

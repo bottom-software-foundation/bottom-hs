@@ -8,7 +8,7 @@ import qualified Data.Text as T
 import Data.Text.Encoding (encodeUtf8)
 import Test.Hspec (Expectation, describe, hspec, it, shouldBe)
 
--- TODO: Why does using this character literally cause GHC to return an error?
+-- TODO: Why does using this character literally cause a GHC lexing error?
 -- Related to https://gitlab.haskell.org/ghc/ghc/-/issues/5518 ?
 twoHundred :: Text
 twoHundred = T.singleton '\129730'

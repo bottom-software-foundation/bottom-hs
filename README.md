@@ -32,7 +32,6 @@ $ cabal run bottom -- --bottomify Test
 ## Development
 
 - [ ] Add microbenchmarks.
-- [ ] Improve error messages on decoding (probably due to issues with the `Show` instance of `ByteString`?).
 
 ## License
 

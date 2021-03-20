@@ -3,6 +3,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData #-}
 
+-- | Encodes and decodes 'Text's to 'Bottom's. For details, see the
+-- [Bottom spec](https://github.com/bottom-software-foundation/spec).
 module Data.Encoding.Bottom
   ( Bottom,
     unBottom,
@@ -16,18 +18,24 @@ import Control.Monad (void)
 import Data.Bits (zeroBits)
 import Data.ByteString (ByteString)
 import qualified Data.ByteString as BS
+import qualified Data.Foldable as F
 import Data.List (unfoldr)
+import Data.List.NonEmpty (NonEmpty (..))
+import qualified Data.List.NonEmpty as NE
 import Data.Text (Text)
 import qualified Data.Text as T
 import Data.Text.Encoding (decodeUtf8, encodeUtf8)
 import Data.Void (Void)
 import Data.Word (Word8)
-import Text.Megaparsec (Parsec, chunk, eof, errorBundlePretty, runParser, someTill, (<|>))
+import Text.Megaparsec (Parsec, Token, chunk, eof, runParser, someTill, (<|>))
+import Text.Megaparsec.Error (ErrorItem (..), ParseError (..), ParseErrorBundle (..), errorBundlePretty)
 
--- Bottom is just a wrapper around a ByteString.
+-- | A 'Bottom' is a wrapper around well-formed, Bottom-encoded 'ByteString'.
+-- Its instances are derived from those of 'ByteString'.
 newtype Bottom = Bottom ByteString
   deriving (Show, Eq, Ord, Semigroup, Monoid)
 
+-- | 'unBottom' unwraps the underlying 'ByteString'.
 unBottom :: Bottom -> ByteString
 unBottom (Bottom bs) = bs
 
@@ -51,12 +59,14 @@ one :: ByteString
 one = singleton '\x002C'
 
 zero :: ByteString
-zero = singleton '\x2764'
+zero = encodeUtf8 $ T.pack ['\x2764', '\xFE0F']
 
 separator :: ByteString
 separator = encodeUtf8 $ T.pack ['\x1F449', '\x1F448']
 
 -- Decoding functions.
+
+-- | 'decode' decodes a 'Bottom' into its corresponding Unicode 'Text'.
 decode :: Bottom -> Text
 decode (Bottom bs) = case decode' bs of
   Right r -> r
@@ -64,13 +74,11 @@ decode (Bottom bs) = case decode' bs of
 
 type Parser = Parsec Void ByteString
 
--- TODO: The error messages from this function are very strange. I encountered
--- the same issue when trying to print ByteString values directly without
--- encoding to Text. What if we parsed on Text instead? Would those error
--- messages be nicer?
+-- | 'decode'' decodes an arbitrary Bottom-encoded 'ByteString' into a 'Text',
+-- or returns a parse error if the 'ByteString' is malformed.
 decode' :: ByteString -> Either Text Text
 decode' bs = case runParser bottomParser "" bs of
-  Left err -> Left $ T.pack $ errorBundlePretty err
+  Left err -> Left $ renderError err
   Right r -> Right r
   where
     bottomParser :: Parser Text
@@ -103,7 +111,30 @@ decode' bs = case runParser bottomParser "" bs of
     separatorParser :: Parser ()
     separatorParser = void $ chunk separator
 
+    -- Custom error messages, because the default error messages print raw
+    -- ByteStrings and don't render correctly.
+    renderError :: ParseErrorBundle ByteString Void -> Text
+    renderError ParseErrorBundle {bundleErrors = (TrivialError offset unexpected expected) :| []} =
+      unexpectedMessage <> expectedMessage <> " at offset " <> T.pack (show offset)
+      where
+        renderErrorItem :: ErrorItem (Token ByteString) -> Text
+        renderErrorItem (Tokens tokens) = "\"" <> decodeUtf8 (BS.pack $ NE.toList tokens) <> "\""
+        renderErrorItem (Label name) = T.pack $ NE.toList name
+        renderErrorItem EndOfInput = "end of input"
+
+        unexpectedMessage = case unexpected of
+          Just unx -> "unexpected " <> renderErrorItem unx <> ": "
+          Nothing -> ""
+
+        expectedMessage = "expected " <> (if length expecteds >= 2 then "one of " else "") <> T.intercalate ", " expecteds
+          where
+            expecteds = renderErrorItem <$> F.toList expected
+    renderError err = T.pack $ errorBundlePretty err
+
 -- Encoding functions.
+
+-- | 'encode' takes a 'Text', and encodes it into a 'Bottom'. To get at the
+-- underlying 'ByteString', unwrap the returned value with 'unBottom'.
 encode :: Text -> Bottom
 encode = Bottom . BS.concatMap encodeByte . encodeUtf8
 
