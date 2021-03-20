@@ -51,7 +51,21 @@ test-suite tests
   other-modules:
   build-depends:
     , bottom
-    , hspec   ==2.7.8
+    , hspec       ==2.7.8
+    , QuickCheck  ==2.14.2
+
+benchmark bench
+  import:         lang
+  import:         deps
+  type:           exitcode-stdio-1.0
+  hs-source-dirs: bench
+  main-is:        Main.hs
+
+  -- cabal-fmt expand bench -Main
+  other-modules:
+  build-depends:
+    , bottom
+    , criterion  ==1.5.9.0
 
 executable bottom
   import:         lang

@@ -4,5 +4,7 @@ cradle:
       component: "lib:bottom"
     - path: "test"
       component: "bottom:test:tests"
+    - path: "bench/Main.hs"
+      component: "bottom:bench:bench"
     - path: "cmd/bottom/Main.hs"
       component: "bottom:exe:bottom"
