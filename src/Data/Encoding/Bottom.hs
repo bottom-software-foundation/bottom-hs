@@ -14,6 +14,7 @@ module Data.Encoding.Bottom
   )
 where
 
+import Control.DeepSeq (NFData)
 import Control.Monad (void)
 import Data.Bits (zeroBits)
 import Data.ByteString (ByteString)
@@ -33,7 +34,7 @@ import Text.Megaparsec.Error (ErrorItem (..), ParseError (..), ParseErrorBundle 
 -- | A 'Bottom' is a wrapper around well-formed, Bottom-encoded 'ByteString'.
 -- Its instances are derived from those of 'ByteString'.
 newtype Bottom = Bottom ByteString
-  deriving (Show, Eq, Ord, Semigroup, Monoid)
+  deriving (Show, Eq, Ord, Semigroup, Monoid, NFData)
 
 -- | 'unBottom' unwraps the underlying 'ByteString'.
 unBottom :: Bottom -> ByteString

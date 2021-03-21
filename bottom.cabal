@@ -37,7 +37,7 @@ library
   -- cabal-fmt: expand src
   exposed-modules: Data.Encoding.Bottom
   build-depends:
-    , bytestring  ==0.11.1.0
+    , deepseq     ==1.4.4.0
     , megaparsec  ==9.0.1
 
 test-suite tests
@@ -66,6 +66,7 @@ benchmark bench
   build-depends:
     , bottom
     , criterion  ==1.5.9.0
+    , deepseq    ==1.4.4.0
 
 executable bottom
   import:         lang

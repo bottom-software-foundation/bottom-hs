@@ -37,12 +37,12 @@ Useful commands:
 - `cabal repl`: Run the library in the REPL. Loads `Data.Encoding.Bottom` with `-XOverloadedStrings` by default (see `.ghci`).
 - `cabal test --enable-coverage`: Run tests, with test coverage.
 - `cabal bench`: Run benchmarks.
+- `cabal haddock --haddock-all --enable-documentation`: Generate documentation.
 - `ormolu --mode inplace $(find . -path ./dist-newstyle -prune -false -o -type f -name '*.hs')`: Format code (see [`ormolu`](https://github.com/tweag/ormolu)).
 - `cabal-fmt -i bottom.cabal`: Format `.cabal` file (see [`cabal-fmt`](https://github.com/phadej/cabal-fmt)).
 
 ### TODO
 
-- [ ] Add microbenchmarks.
 - [ ] Add CI/CD.
 - [ ] Publish to Hackage.
 
