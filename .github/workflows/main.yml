@@ -42,4 +42,6 @@ jobs:
         cabal sdist
     - uses: actions/upload-artifact@v2
       with:
-        path: ./dist-newstyle/sdist
+        path: |
+          ./dist-newstyle/sdist/*.tar.gz
+          ./dist-newstyle/*-docs.tar.gz
