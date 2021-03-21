@@ -8,7 +8,7 @@ Based off of the hilarious [bottom-rs](https://github.com/bottom-software-founda
 
 ![,,,,,,,,,](https://cdn.discordapp.com/attachments/644479051918082050/799905088541425664/bottom.jpg)
 
-## Usage
+## Using the CLI
 
 ```sh
 $ cabal run bottom -- --help
@@ -33,6 +33,10 @@ $ cabal run bottom -- --bottomify Test
 💖✨✨✨,,,,👉👈💖💖,👉👈💖💖✨🥺👉👈💖💖✨🥺,👉👈
 ```
 
+## Usage as a library
+
+See the generate Haddock documentation in Hackage for module documentation.
+
 ## Development
 
 Useful commands:
@@ -44,10 +48,6 @@ Useful commands:
 - `cabal haddock --haddock-all --enable-documentation`: Generate documentation.
 - `ormolu --mode inplace $(find . -path ./dist-newstyle -prune -false -o -type f -name '*.hs')`: Format code (see [`ormolu`](https://github.com/tweag/ormolu)).
 - `cabal-fmt -i bottom.cabal`: Format `.cabal` file (see [`cabal-fmt`](https://github.com/phadej/cabal-fmt)).
-
-### TODO
-
-- [ ] Publish to Hackage.
 
 ## License
 
