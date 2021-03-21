@@ -1,20 +1,25 @@
-cabal-version: 3.0
-name:          bottom
-version:       0.1.0.0
-synopsis:      Encoding and decoding for the Bottom spec.
+cabal-version:      3.0
+name:               bottom
+version:            0.1.0.0
+synopsis:           Encoding and decoding for the Bottom spec.
 description:
   Encoding and decoding for the [Bottom spec](https://github.com/bottom-software-foundation/spec).
 
-license:       Apache-2.0
-license-file:  LICENSE
-author:        Leo Zhang
-maintainer:    leo@leozhang.me
-copyright:     2021 Leo Zhang
-category:      Codec
-build-type:    Simple
-homepage:      https://github.com/bottom-software-foundation/bottom-hs
-bug-reports:   https://github.com/bottom-software-foundation/bottom-hs/issues
-tested-with:   GHC ==8.10.4
+license:            Apache-2.0
+license-file:       LICENSE
+author:             Leo Zhang
+maintainer:         leo@leozhang.me
+copyright:          2021 Leo Zhang
+category:           Codec
+build-type:         Simple
+homepage:           https://github.com/bottom-software-foundation/bottom-hs
+bug-reports:
+  https://github.com/bottom-software-foundation/bottom-hs/issues
+
+tested-with:        GHC ==8.10.4
+extra-source-files:
+  CHANGELOG.md
+  README
 
 source-repository head
   type:     git
