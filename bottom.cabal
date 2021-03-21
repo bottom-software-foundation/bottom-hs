@@ -19,7 +19,7 @@ bug-reports:
 tested-with:        GHC ==8.10.4
 extra-source-files:
   CHANGELOG.md
-  README
+  README.md
 
 source-repository head
   type:     git
