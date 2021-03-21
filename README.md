@@ -43,7 +43,6 @@ Useful commands:
 
 ### TODO
 
-- [ ] Add CI/CD.
 - [ ] Publish to Hackage.
 
 ## License
