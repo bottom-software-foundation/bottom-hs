@@ -2,11 +2,12 @@
 
 module Main (main) where
 
-import Data.Encoding.Bottom (decode', encode, unBottom)
+import Data.Encoding.Bottom (decode, decode', encode, unBottom)
 import Data.Text (Text)
 import qualified Data.Text as T
 import Data.Text.Encoding (encodeUtf8)
 import Test.Hspec (Expectation, describe, hspec, it, shouldBe)
+import Test.Hspec.QuickCheck (prop)
 
 -- TODO: Why does using this character literally cause a GHC lexing error?
 -- Related to https://gitlab.haskell.org/ghc/ghc/-/issues/5518 ?
@@ -44,3 +45,4 @@ main = hspec $ do
   describe "Data.Encoding.Bottom" $ do
     it "encodes strings" $ sequence_ $ uncurry testEncode <$> testCases
     it "decodes strings" $ sequence_ $ uncurry (flip testDecode) <$> testCases
+    prop "decode is the inverse of encode" $ \s -> (T.unpack . decode . encode . T.pack) s `shouldBe` s

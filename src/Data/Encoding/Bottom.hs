@@ -27,7 +27,7 @@ import qualified Data.Text as T
 import Data.Text.Encoding (decodeUtf8, encodeUtf8)
 import Data.Void (Void)
 import Data.Word (Word8)
-import Text.Megaparsec (Parsec, Token, chunk, eof, runParser, someTill, (<|>))
+import Text.Megaparsec (Parsec, Token, chunk, eof, manyTill, runParser, someTill, (<|>))
 import Text.Megaparsec.Error (ErrorItem (..), ParseError (..), ParseErrorBundle (..), errorBundlePretty)
 
 -- | A 'Bottom' is a wrapper around well-formed, Bottom-encoded 'ByteString'.
@@ -82,7 +82,7 @@ decode' bs = case runParser bottomParser "" bs of
   Right r -> Right r
   where
     bottomParser :: Parser Text
-    bottomParser = decodeUtf8 . BS.pack <$> (fmap . fmap) toEnum (groupParser `someTill` eof)
+    bottomParser = decodeUtf8 . BS.pack <$> (fmap . fmap) toEnum (groupParser `manyTill` eof)
 
     groupParser :: Parser Int
     groupParser = parseNull <|> parseValues
@@ -140,7 +140,7 @@ encode = Bottom . BS.concatMap encodeByte . encodeUtf8
 
 encodeByte :: Word8 -> ByteString
 encodeByte b
-  | b == zeroBits = zero
+  | b == zeroBits = zero <> separator
   | otherwise = BS.concat (unfoldr encodeByte' (fromEnum b)) <> separator
   where
     encodeByte' :: Int -> Maybe (ByteString, Int)
