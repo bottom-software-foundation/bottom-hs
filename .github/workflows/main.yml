@@ -40,8 +40,13 @@ jobs:
       run: |
         cabal haddock --haddock-for-hackage --enable-doc
         cabal sdist
-    - uses: actions/upload-artifact@v2
+    - name: Save Hackage release
+      uses: actions/upload-artifact@v2
       with:
-        path: |
-          ./dist-newstyle/sdist/*.tar.gz
-          ./dist-newstyle/*-docs.tar.gz
+        name: bottom.tar.gz
+        path: ./dist-newstyle/sdist
+    - name: Save Hackage documentation bundle
+      uses: actions/upload-artifact@v2
+      with:
+        name: bottom-docs.tar.gz
+        path: ./dist-newstyle/*-docs.tar.gz
