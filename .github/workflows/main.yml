@@ -37,7 +37,9 @@ jobs:
       run: cabal bench all
 
     - name: Generate Hackage release
-      run: cabal sdist
+      run: |
+        cabal haddock --haddock-for-hackage --enable-doc
+        cabal sdist
     - uses: actions/upload-artifact@v2
       with:
         path: ./dist-newstyle/sdist

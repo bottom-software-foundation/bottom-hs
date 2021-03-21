@@ -12,8 +12,8 @@ maintainer:    leo@leozhang.me
 copyright:     2021 Leo Zhang
 category:      Codec
 build-type:    Simple
-homepage:      https://github.com/liftM/bottom-hs
-bug-reports:   https://github.com/liftM/bottom-hs/issues
+homepage:      https://github.com/bottom-software-foundation/bottom-hs
+bug-reports:   https://github.com/bottom-software-foundation/bottom-hs/issues
 tested-with:   GHC ==8.10.4
 
 source-repository head

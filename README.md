@@ -1,5 +1,9 @@
 # bottom-hs
 
+[![Build and test](https://github.com/bottom-software-foundation/bottom-hs/actions/workflows/main.yml/badge.svg)](https://github.com/bottom-software-foundation/bottom-hs/actions/workflows/main.yml)
+[![Hackage](https://img.shields.io/hackage/v/bottom)](https://hackage.haskell.org/package/bottom)
+[![Hackage-Deps](https://img.shields.io/hackage-deps/v/bottom)](https://hackage.haskell.org/package/bottom)
+
 Based off of the hilarious [bottom-rs](https://github.com/bottom-software-foundation/bottom-rs), built to the [Bottom spec](https://github.com/bottom-software-foundation/spec).
 
 ![,,,,,,,,,](https://cdn.discordapp.com/attachments/644479051918082050/799905088541425664/bottom.jpg)
