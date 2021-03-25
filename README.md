@@ -35,7 +35,7 @@ $ cabal run bottom -- --bottomify Test
 
 ## Usage as a library
 
-See the generate Haddock documentation in Hackage for module documentation.
+See the generated Haddock documentation in Hackage for module documentation.
 
 ## Development
 
