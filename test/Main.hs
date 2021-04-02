@@ -22,7 +22,7 @@ testEncode input expected = unBottom (encode input) `shouldBe` encodeUtf8 expect
 testDecode :: Text -> Text -> Expectation
 testDecode input expected = case decode' $ encodeUtf8 input of
   Right r -> encodeUtf8 r `shouldBe` encodeUtf8 expected
-  Left err -> error $ T.unpack err
+  Left err -> error err
 
 testCases :: [(Text, Text)]
 testCases =

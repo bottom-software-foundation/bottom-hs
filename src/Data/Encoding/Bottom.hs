@@ -20,7 +20,7 @@ import Data.Bits (zeroBits)
 import Data.ByteString (ByteString)
 import qualified Data.ByteString as BS
 import qualified Data.Foldable as F
-import Data.List (unfoldr)
+import Data.List (intercalate, unfoldr)
 import Data.List.NonEmpty (NonEmpty (..))
 import qualified Data.List.NonEmpty as NE
 import Data.Text (Text)
@@ -71,13 +71,13 @@ separator = encodeUtf8 $ T.pack ['\x1F449', '\x1F448']
 decode :: Bottom -> Text
 decode (Bottom bs) = case decode' bs of
   Right r -> r
-  Left err -> error "Data.Encoding.Bottom.decode: malformed Bottom: " <> err
+  Left err -> error $ "Data.Encoding.Bottom.decode: malformed Bottom: " <> err
 
 type Parser = Parsec Void ByteString
 
 -- | 'decode'' decodes an arbitrary Bottom-encoded 'ByteString' into a 'Text',
--- or returns a parse error if the 'ByteString' is malformed.
-decode' :: ByteString -> Either Text Text
+-- or returns a parse error message if the 'ByteString' is malformed.
+decode' :: ByteString -> Either String Text
 decode' bs = case runParser bottomParser "" bs of
   Left err -> Left $ renderError err
   Right r -> Right r
@@ -114,23 +114,23 @@ decode' bs = case runParser bottomParser "" bs of
 
     -- Custom error messages, because the default error messages print raw
     -- ByteStrings and don't render correctly.
-    renderError :: ParseErrorBundle ByteString Void -> Text
+    renderError :: ParseErrorBundle ByteString Void -> String
     renderError ParseErrorBundle {bundleErrors = (TrivialError offset unexpected expected) :| []} =
-      unexpectedMessage <> expectedMessage <> " at offset " <> T.pack (show offset)
+      unexpectedMessage <> expectedMessage <> " at offset " <> show offset
       where
-        renderErrorItem :: ErrorItem (Token ByteString) -> Text
-        renderErrorItem (Tokens tokens) = "\"" <> decodeUtf8 (BS.pack $ NE.toList tokens) <> "\""
-        renderErrorItem (Label name) = T.pack $ NE.toList name
+        renderErrorItem :: ErrorItem (Token ByteString) -> String
+        renderErrorItem (Tokens tokens) = T.unpack $ "\"" <> decodeUtf8 (BS.pack $ NE.toList tokens) <> "\""
+        renderErrorItem (Label name) = NE.toList name
         renderErrorItem EndOfInput = "end of input"
 
         unexpectedMessage = case unexpected of
           Just unx -> "unexpected " <> renderErrorItem unx <> ": "
           Nothing -> ""
 
-        expectedMessage = "expected " <> (if length expecteds >= 2 then "one of " else "") <> T.intercalate ", " expecteds
+        expectedMessage = "expected " <> (if length expecteds >= 2 then "one of " else "") <> intercalate ", " expecteds
           where
             expecteds = renderErrorItem <$> F.toList expected
-    renderError err = T.pack $ errorBundlePretty err
+    renderError err = errorBundlePretty err
 
 -- Encoding functions.
 

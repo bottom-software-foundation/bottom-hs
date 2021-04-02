@@ -68,4 +68,4 @@ main = do
     Bottomify -> putStrLn $ T.unpack $ decodeUtf8 $ unBottom $ encode text
     Regress -> case decode' $ encodeUtf8 text of
       Right decoded -> putStrLn $ T.unpack decoded
-      Left err -> putStrLn $ T.unpack err
+      Left err -> putStrLn err

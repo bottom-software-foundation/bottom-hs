@@ -1,6 +1,6 @@
 cabal-version:      3.0
 name:               bottom
-version:            0.1.0.0
+version:            0.2.0.0
 synopsis:           Encoding and decoding for the Bottom spec.
 description:
   Encoding and decoding for the [Bottom spec](https://github.com/bottom-software-foundation/spec).
