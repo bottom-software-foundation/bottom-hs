@@ -2,7 +2,7 @@
 
 [![Build and test](https://github.com/bottom-software-foundation/bottom-hs/actions/workflows/main.yml/badge.svg)](https://github.com/bottom-software-foundation/bottom-hs/actions/workflows/main.yml)
 [![Hackage](https://img.shields.io/hackage/v/bottom)](https://hackage.haskell.org/package/bottom)
-[![Hackage-Deps](https://img.shields.io/hackage-deps/v/bottom)](https://hackage.haskell.org/package/bottom)
+[![Hackage-Deps](https://img.shields.io/hackage-deps/v/bottom)](https://packdeps.haskellers.com/feed?needle=bottom)
 
 Based off of the hilarious [bottom-rs](https://github.com/bottom-software-foundation/bottom-rs), built to the [Bottom spec](https://github.com/bottom-software-foundation/spec).
 
