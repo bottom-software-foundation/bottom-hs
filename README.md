@@ -6,7 +6,7 @@
 
 Based off of the hilarious [bottom-rs](https://github.com/bottom-software-foundation/bottom-rs), built to the [Bottom spec](https://github.com/bottom-software-foundation/spec).
 
-![,,,,,,,,,](https://cdn.discordapp.com/attachments/644479051918082050/799905088541425664/bottom.jpg)
+![Meme: What the fuck is 🥺? Use your words, I don't speak bottom.](/.github/readme/bottom.jpg)
 
 ## Using the CLI
 
